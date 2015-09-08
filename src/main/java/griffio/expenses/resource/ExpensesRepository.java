@@ -11,27 +11,27 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ExpensesRepository {
 
-    private ConcurrentHashMap<Identifier, Expense> expenses = new ConcurrentHashMap<>();
+  private ConcurrentHashMap<Identifier, Expense> expenses = new ConcurrentHashMap<>();
 
-    public ExpensesRepository() {
-    }
+  public ExpensesRepository() {
+  }
 
-    public Optional<Expense> findByKey(Identifier key) {
-        return Optional.of(expenses.get(key));
-    }
+  public Optional<Expense> findByKey(Identifier key) {
+    return Optional.of(expenses.get(key));
+  }
 
-    public List<Expense> getExpenses() {
-        return Lists.newArrayList(expenses.values());
-    }
+  public List<Expense> getExpenses() {
+    return Lists.newArrayList(expenses.values());
+  }
 
-    public Collection<Expense> create(Expense expense) {
-        expenses.put(expense.getId(), expense);
-        return getExpenses();
-    }
+  public Collection<Expense> create(Expense expense) {
+    expenses.put(expense.getId(), expense);
+    return getExpenses();
+  }
 
-    public Collection<Expense> update(Expense expense) {
-        expenses.put(expense.getId(), expense);
-        return getExpenses();
-    }
+  public Collection<Expense> update(Expense expense) {
+    expenses.put(expense.getId(), expense);
+    return getExpenses();
+  }
 
 }

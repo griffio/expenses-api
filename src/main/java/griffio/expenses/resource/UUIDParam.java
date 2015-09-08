@@ -7,12 +7,12 @@ import java.util.UUID;
 
 public final class UUIDParam extends AbstractParam<Identifier> {
 
-    public UUIDParam(String input) {
-        super(input);
-    }
+  public UUIDParam(String input) {
+    super(input);
+  }
 
-    @Override
-    protected Identifier parse(String input) throws Exception {
-        return Identifier.create(UUID.fromString(input));
-    }
+  @Override
+  protected Identifier parse(String input) throws Exception {
+    return Identifier.create(UUID.fromString(input));
+  }
 }

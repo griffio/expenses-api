@@ -9,14 +9,17 @@ import java.io.IOException;
 
 public class ExpenseJsonSerializer extends JsonSerializer<Expense> {
 
-    @Override
-    public void serialize(Expense expense, JsonGenerator json, SerializerProvider provider) throws IOException {
-        json.writeStartObject();
-        json.writeObjectField("id", expense.getId().id());
-        json.writeStringField("reason", expense.getReason().text());
-        json.writeObjectField("cash", expense.getCash().amount());
-        json.writeStringField("date", expense.getDate().toString());
-        json.writeEndObject();
-    }
+  @Override
+  public void serialize(Expense expense, JsonGenerator json, SerializerProvider provider) throws IOException {
+    json.writeStartObject();
+    json.writeObjectField("id", expense.getId().id());
+    json.writeStringField("reason", expense.getReason().text());
+    json.writeObjectFieldStart("cash");
+    json.writeStringField("currency", expense.getCash().currency().getCurrencyCode());
+    json.writeNumberField("amount", expense.getCash().amount());
+    json.writeEndObject();
+    json.writeStringField("date", expense.getDate().toString());
+    json.writeEndObject();
+  }
 
 }

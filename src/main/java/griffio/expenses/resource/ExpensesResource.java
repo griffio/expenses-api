@@ -17,29 +17,29 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class ExpensesResource {
 
-    private ExpensesRepository repository;
+  private ExpensesRepository repository;
 
-    public ExpensesResource(ExpensesRepository repository) {
-        this.repository = repository;
-    }
+  public ExpensesResource(ExpensesRepository repository) {
+    this.repository = repository;
+  }
 
-    @GET
-    @Timed
-    public List<Expense> list() {
-        return repository.getExpenses();
-    }
+  @GET
+  @Timed
+  public List<Expense> list() {
+    return repository.getExpenses();
+  }
 
-    @POST
-    @Timed
-    public void post(Expense expense) {
-        repository.create(expense);
-    }
+  @POST
+  @Timed
+  public void post(Expense expense) {
+    repository.create(expense);
+  }
 
-    @GET
-    @Timed
-    @Path("/ids/{id}")
-    public Expense get(@PathParam("id") UUIDParam id) {
-        return repository.findByKey(id.get()).get();
-    }
+  @GET
+  @Timed
+  @Path("/ids/{id}")
+  public Expense get(@PathParam("id") UUIDParam id) {
+    return repository.findByKey(id.get()).get();
+  }
 
 }

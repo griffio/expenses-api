@@ -14,20 +14,22 @@ import org.joda.time.LocalDate;
 import java.io.IOException;
 import java.util.Currency;
 import java.util.UUID;
+
 /**
  * Conversion to Expense performed in one place for incoming io
- * {"id":"97ac81fc-7fb4-11e4-b116-123b93f75cba","reason":"rhubarb and sausages","cash":"1234.00","date":"2014-08-01"}
+ * {"id":"97ac81fc-7fb4-11e4-b116-123b93f75cba","reason":"rhubarb and sausages","cash":{"currency":"USD","amount":1234.00},"date":"2014-08-01"}
  */
 public class ExpenseJsonDeSerializer extends JsonDeserializer<Expense> {
 
-    @Override
-    public Expense deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
-        JsonNode node = jp.getCodec().readTree(jp);
-        Identifier uuid = Identifier.create(UUID.fromString(node.get("id").asText()));
-        LocalDate isoDate = LocalDate.parse(node.get("date").asText());
-        Cash cash = Cash.create(Currency.getInstance(ctxt.getLocale()), node.get("cash").decimalValue());
-        Description reason = Description.create(node.get("reason").asText());
-        return new ExpenseBuilder().id(uuid).date(isoDate).cash(cash).reason(reason).createExpense();
-    }
+  @Override
+  public Expense deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
+    JsonNode node = jp.getCodec().readTree(jp);
+    Identifier uuid = Identifier.create(UUID.fromString(node.get("id").asText()));
+    LocalDate isoDate = LocalDate.parse(node.get("date").asText());
+    JsonNode cashNode = node.get("cash");
+    Cash cash = Cash.create(Currency.getInstance(cashNode.get("currency").asText()), cashNode.get("amount").decimalValue());
+    Description reason = Description.create(node.get("reason").asText());
+    return new ExpenseBuilder().id(uuid).date(isoDate).cash(cash).reason(reason).build();
+  }
 
 }

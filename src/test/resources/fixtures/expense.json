@@ -1,1 +1,9 @@
-{"id":"97ac81fc-7fb4-11e4-b116-123b93f75cba","reason":"rhubarb and sausages","amount":1234.00,"date":"2014-08-01"}
+{
+  "id": "97ac81fc-7fb4-11e4-b116-123b93f75cba",
+  "reason": "rhubarb and sausages",
+  "cash": {
+    "currency": "USD",
+    "amount": 1234.00
+  },
+  "date": "2014-08-01"
+}

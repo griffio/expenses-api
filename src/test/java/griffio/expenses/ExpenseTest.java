@@ -12,30 +12,30 @@ import java.util.UUID;
 
 public class ExpenseTest {
 
-    private ExpenseBuilder builder;
+  private ExpenseBuilder builder;
 
-    @Before
-    public void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
 
-        builder = new ExpenseBuilder()
-                .cash(Cash.create(Currency.getInstance(Locale.US), BigDecimal.TEN))
-                .date(LocalDate.parse("1999-03-01"))
-                .reason(Description.create("Give me a reason"));
-    }
+    builder = new ExpenseBuilder()
+        .cash(Cash.create(Currency.getInstance(Locale.US), BigDecimal.TEN))
+        .date(LocalDate.parse("1999-03-01"))
+        .reason(Description.create("Give me a reason"));
+  }
 
-    @Test
-    public void identity_by_id_hashcode_equals() {
+  @Test
+  public void identity_by_id_hashcode_equals() {
 
-        Expense a1 = builder.id(Identifier.create(UUID.randomUUID())).createExpense();
-        Expense a2 = builder.reason(Description.create("id as A1")).createExpense();
+    Expense a1 = builder.id(Identifier.create(UUID.randomUUID())).build();
+    Expense a2 = builder.reason(Description.create("id as A1")).build();
 
-        Expense b1 = builder.id(Identifier.create(UUID.randomUUID())).createExpense();
-        Expense b2 = builder.reason(Description.create("id as B1")).createExpense();
+    Expense b1 = builder.id(Identifier.create(UUID.randomUUID())).build();
+    Expense b2 = builder.reason(Description.create("id as B1")).build();
 
-        new EqualsTester()
-                .addEqualityGroup(a1, a2)
-                .addEqualityGroup(b1, b2)
-                .testEquals();
-    }
+    new EqualsTester()
+        .addEqualityGroup(a1, a2)
+        .addEqualityGroup(b1, b2)
+        .testEquals();
+  }
 
 }

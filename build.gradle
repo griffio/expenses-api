@@ -1,82 +1,62 @@
 plugins {
-    id 'java'
-    id 'com.github.johnrengelman.shadow' version '1.2.0'
-    id 'com.ewerk.gradle.plugins.auto-value' version '1.0.1'
+  id 'java'
+  id 'com.github.johnrengelman.shadow' version '1.2.0'
+  id 'com.ewerk.gradle.plugins.auto-value' version '1.0.5'
+  id 'com.ewerk.gradle.plugins.querydsl' version '1.0.5'
+
 }
 
 autoValue {
-    autoValueSourcesDir = 'src/autoValue'
+  autoValueSourcesDir = 'src/autoValue/java'
+  library = 'com.google.auto.value:auto-value:1.1'
 }
 
-configurations {
-    aptCompile
+querydsl {
+  library = "com.mysema.querydsl:querydsl-apt:$querydslVersion"
+  querydslSourcesDir = "src/querydsl/java"
+  querydslDefault = true
 }
 
 repositories {
-    jcenter()
+  jcenter()
 }
 
 dependencies {
 
-    aptCompile(
-            "com.mysema.querydsl:querydsl-apt:$querydslVersion")
+  compile(
+      "io.dropwizard:dropwizard-core:$dropwizardVersion",
+      "io.dropwizard:dropwizard-auth:$dropwizardVersion",
+      "com.mysema.querydsl:querydsl-collections:$querydslVersion",
+      "com.mysema.querydsl:querydsl-sql:$querydslVersion",
+  )
 
-    compile(
-            "io.dropwizard:dropwizard-core:$dropwizardVersion",
-            "io.dropwizard:dropwizard-auth:$dropwizardVersion",
-            "com.mysema.querydsl:querydsl-collections:$querydslVersion",
-            "com.mysema.querydsl:querydsl-sql:$querydslVersion",
-    )
-
-    testCompile(
-            "io.dropwizard:dropwizard-testing:$dropwizardVersion",
-            "junit:junit:$junitVersion",
-            "com.google.guava:guava-testlib:$guavaVersion"
-    )
-}
-
-sourceSets {
-
-    apt {
-        java {
-            srcDirs = ['src/generated/querydsl']
-        }
-    }
-}
-
-task annotationProc(type: JavaCompile, group: 'build', description: 'Invoke annotation processor with main classpath + apt classpath') {
-    source = sourceSets.main.java
-    classpath = configurations.compile + configurations.aptCompile
-    options.compilerArgs = [
-            '-proc:only',
-            '-processor', 'com.mysema.query.apt.QuerydslAnnotationProcessor'
-    ]
-    destinationDir = sourceSets.apt.java.srcDirs.iterator().next()
-}
-
-compileJava {
-    dependsOn annotationProc
-    source = sourceSets.main.java + sourceSets.apt.java
-}
-
-clean {
-    delete sourceSets.apt.java.srcDirs
+  testCompile(
+      "io.dropwizard:dropwizard-testing:$dropwizardVersion",
+      "junit:junit:$junitVersion",
+      "com.google.guava:guava-testlib:$guavaVersion"
+  )
 }
 
 jar {
-    manifest {
-        attributes 'Main-Class': "$mainClassName"
-        attributes 'Build-Date': new Date()
-        attributes 'Build-Jdk': System.getProperty('java.version')
-        attributes 'Implementation-Title': project.name
-        attributes 'Implementation-Version': project.version
-        attributes 'Implementation-Vendor-Id': project.group
-    }
+  manifest {
+    attributes 'Main-Class': "$mainClassName"
+    attributes 'Build-Date': new Date()
+    attributes 'Build-Jdk': System.getProperty('java.version')
+    attributes 'Implementation-Title': project.name
+    attributes 'Implementation-Version': project.version
+    attributes 'Implementation-Vendor-Id': project.group
+  }
+}
+
+tasks.withType(JavaCompile) {
+  description = "javac: ignore processor hints, keep all other hints"
+  sourceCompatibility = JavaVersion.VERSION_1_8
+  targetCompatibility = JavaVersion.VERSION_1_8
+  options.compilerArgs += ["-Xlint:all,-processing"]
+  options.encoding = "UTF-8"
 }
 
 shadow {
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = "$gradleVersion"
-}
+apply from: 'wrapper.gradle'
