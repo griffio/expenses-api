@@ -4,7 +4,7 @@ import org.joda.time.LocalDate;
 
 import java.util.UUID;
 
-public class ExpenseBuilder {
+public final class ExpenseBuilder {
 
   private Identifier identifier;
   private Description reason;
